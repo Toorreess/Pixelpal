@@ -39,6 +39,13 @@ class MenuActivity : AppCompatActivity() {
             showHeartImage()
             increaseProgressBar()
         }
+
+        val gameButton: Button = findViewById(R.id.btn_game)
+        gameButton.setOnClickListener {
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+        }
+
         startProgressBar()
 
         val coinManager = CoinManager(this)

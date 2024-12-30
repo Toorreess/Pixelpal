@@ -10,4 +10,5 @@
     <string name="btn_close_shop">Close</string>
     <string name="tv_inventory_title">Inventory</string>
     <string name="tv_shop_title">Shop</string>
+    <string name="card_placeholder">Card</string>
 </resources>
