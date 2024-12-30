@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Pixelpal</string>
+    <string name="msg_welcome">Welcome to PixelPal</string>
+    <string name="btn_init">Let\'s go</string>
+    <string name="btn_shop">Shop</string>
+    <string name="btn_inventory">Inventory</string>
+    <string name="btn_game">Game</string>
+    <string name="alt_pet_sprite">Your pet</string>
+    <string name="tv_balance">Balance:</string>
+    <string name="btn_close_shop">Close</string>
+    <string name="tv_inventory_title">Inventory</string>
+    <string name="tv_shop_title">Shop</string>
+</resources>
