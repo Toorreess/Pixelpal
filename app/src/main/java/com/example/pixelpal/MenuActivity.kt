@@ -8,11 +8,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.pixelpal.manager.CoinManager
 
 class MenuActivity : AppCompatActivity() {
 
     private lateinit var heartProgressBar: ProgressBar
+    private lateinit var hungerProgressBar: ProgressBar
     private lateinit var heartImageView: ImageView
     private val handler = Handler(Looper.getMainLooper())
     private var progressStatus = 100
@@ -22,6 +25,7 @@ class MenuActivity : AppCompatActivity() {
         setContentView(R.layout.activity_menu)
 
         heartProgressBar = findViewById(R.id.heartProgressBar)
+        hungerProgressBar = findViewById(R.id.hungerProgressBar)
         heartImageView = findViewById(R.id.iv_heart)
 
         val shopButton: Button = findViewById(R.id.btn_store)
@@ -35,8 +39,17 @@ class MenuActivity : AppCompatActivity() {
             showHeartImage()
             increaseProgressBar()
         }
-
         startProgressBar()
+
+        val coinManager = CoinManager(this)
+        val balanceTextView: TextView = findViewById(R.id.tv_balance)
+        val newTextView = coinManager.getCoins().toString()
+
+        balanceTextView.text="${balanceTextView.text} $newTextView"
+
+
+        val progressValue = intent.getIntExtra("progress_value", 0)
+        hungerProgressBar.progress = progressStatus + progressValue
     }
 
     private fun startProgressBar() {
@@ -45,8 +58,9 @@ class MenuActivity : AppCompatActivity() {
                 progressStatus -= 1
                 handler.post {
                     heartProgressBar.progress = progressStatus
+                    hungerProgressBar.progress = progressStatus
                 }
-                Thread.sleep(100) // Ajusta el tiempo de espera según sea necesario
+                Thread.sleep(500) // Ajusta el tiempo de espera según sea necesario
             }
         }.start()
     }
@@ -61,5 +75,10 @@ class MenuActivity : AppCompatActivity() {
     private fun increaseProgressBar() {
         progressStatus = (progressStatus + 10).coerceAtMost(100)
         heartProgressBar.progress = progressStatus
+    }
+
+    private fun increaseHungerProgressBar() {
+        progressStatus = (progressStatus + 10).coerceAtMost(100)
+        hungerProgressBar.progress = progressStatus
     }
 }

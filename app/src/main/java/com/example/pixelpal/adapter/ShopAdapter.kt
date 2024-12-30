@@ -3,6 +3,7 @@ package com.example.pixelpal.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pixelpal.R
@@ -10,7 +11,7 @@ import com.example.pixelpal.model.ShopItem
 
 class ShopAdapter(
     private val items: List<ShopItem>,
-    private val onItemClick: (ShopItem) -> Unit
+    private val onItemClick: (ShopItem) -> Unit,
 ) : RecyclerView.Adapter<ShopAdapter.StoreViewHolder>() {
 
     inner class StoreViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

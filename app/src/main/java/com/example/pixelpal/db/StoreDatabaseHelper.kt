@@ -9,12 +9,13 @@ class StoreDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
 
     companion object {
         const val DATABASE_NAME = "store.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
 
         const val TABLE_ITEMS = "items"
         const val COLUMN_ID = "id"
         const val COLUMN_NAME = "name"
         const val COLUMN_PRICE = "price"
+        const val COLUMN_RESTORE_POINTS = "restore_points"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -22,21 +23,26 @@ class StoreDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
             CREATE TABLE $TABLE_ITEMS (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_NAME TEXT NOT NULL,
-                $COLUMN_PRICE REAL NOT NULL
+                $COLUMN_PRICE REAL NOT NULL,
+                $COLUMN_RESTORE_POINTS INTEGER NOT NULL
             )
         """.trimIndent()
         db.execSQL(createTableQuery)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_ITEMS")
-        onCreate(db)
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE items ADD COLUMN restore_points INTEGER DEFAULT 0")
+        } else {
+            db.execSQL("DROP TABLE IF EXISTS $TABLE_ITEMS")
+            onCreate(db)
+        }
     }
 
-    fun insertItem(name: String, price: Double) {
+    fun insertItem(name: String, price: Double, restore: Int) {
         val db = writableDatabase
-        val query = "INSERT INTO $TABLE_ITEMS ($COLUMN_NAME, $COLUMN_PRICE) VALUES (?, ?)"
-        db.execSQL(query, arrayOf(name, price))
+        val query = "INSERT INTO $TABLE_ITEMS ($COLUMN_NAME, $COLUMN_PRICE, $COLUMN_RESTORE_POINTS) VALUES (?, ?, ?)"
+        db.execSQL(query, arrayOf(name, price, restore))
         db.close()
     }
 
@@ -50,8 +56,9 @@ class StoreDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
                 val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))
                 val price = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PRICE))
+                val restorePoints = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RESTORE_POINTS))
                 items.add(ShopItem(
-                    id, name, price))
+                    id, name, price, restorePoints))
             } while (cursor.moveToNext())
         }
         cursor.close()
